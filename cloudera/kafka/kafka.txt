@@ -1,0 +1,36 @@
+Streams:
+========
+https://kafka.apache.org/27/documentation/streams/quickstart
+
+
+kafka-topics --zookeeper celtic.pacificsevenseas.com:2181 --list
+
+kafka-topics --create \
+    --zookeeper celtic.pacificsevenseas.com:2181 \
+    --replication-factor 1 \
+    --partitions 1 \
+    --topic streams-plaintext-input
+
+kafka-topics --create \
+    --zookeeper celtic.pacificsevenseas.com:2181 \
+    --replication-factor 1 \
+    --partitions 1 \
+    --topic streams-wordcount-output \
+    --config cleanup.policy=compact
+
+kafka-topics --zookeeper celtic.pacificsevenseas.com:2181 --describe
+
+**** Run WordCountApplication java project in Intellij
+
+
+kafka-console-producer --broker-list celtic.pacificsevenseas.com:9092 --topic streams-plaintext-input
+
+kafka-console-consumer --bootstrap-server celtic.pacificsevenseas.com:9092 \
+    --topic streams-wordcount-output \
+    --from-beginning \
+    --formatter kafka.tools.DefaultMessageFormatter \
+    --property print.key=true \
+    --property print.value=true \
+    --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+    --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+

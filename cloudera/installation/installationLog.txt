@@ -1,0 +1,630 @@
+*********************************************************************************************
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/configure_cm_repo.html
+* Step 1: Configure a Repository for Cloudera Manager
+*********************************************************************************************
+
+=> Download the cloudera.list file for your OS version to the /etc/apt/sources.list.d/ directory on the Cloudera Manager Server host. You can find the URL in the Repo File column in the Cloudera Manager 6 Version and Download Information table for the Cloudera Manager version you want to install.
+
+prashant@celtic:~$ sudo cp ~/Downloads/cloudera-manager.list /etc/apt/sources.list.d/
+prashant@celtic:~$ ls -l /etc/apt/sources.list.d/
+total 20
+-rw-r--r-- 1 root root 117 Sep 29 15:40 cloudera-manager.list
+-rw-r--r-- 1 root root 189 Sep 13  2018 google-chrome.list
+-rw-r--r-- 1 root root 110 Jun 20 02:57 nodesource.list
+-rw-r--r-- 1 root root 193 Jun  4 22:18 vscode.list
+-rw-r--r-- 1 root root  47 Jun 20 03:31 yarn.list
+
+
+prashant@celtic:~$ wget https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt/archive.key
+--2019-09-29 15:28:14--  https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt/archive.key
+Resolving archive.cloudera.com (archive.cloudera.com)... 151.101.200.167
+Connecting to archive.cloudera.com (archive.cloudera.com)|151.101.200.167|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1718 (1.7K) [application/pgp-keys]
+Saving to: ‘archive.key’
+
+archive.key                                        100%[================================================================================================================>]   1.68K  --.-KB/s    in 0s      
+
+2019-09-29 15:28:15 (325 MB/s) - ‘archive.key’ saved [1718/1718]
+
+prashant@celtic:~$ sudo apt-key add archive.key
+[sudo] password for prashant: 
+OK
+
+prashant@celtic:~$ sudo apt-get update
+Hit:2 http://us.archive.ubuntu.com/ubuntu xenial InRelease                                                                                                                                      
+Hit:3 http://packages.microsoft.com/repos/vscode stable InRelease                                                                                                                               
+Ign:4 http://dl.google.com/linux/chrome/deb stable InRelease                                                                                                                     
+Hit:5 http://us.archive.ubuntu.com/ubuntu xenial-updates InRelease                                                          
+Hit:6 http://us.archive.ubuntu.com/ubuntu xenial-backports InRelease                                  
+Hit:7 https://deb.nodesource.com/node_10.x xenial InRelease                                           
+Hit:8 http://security.ubuntu.com/ubuntu xenial-security InRelease        
+Hit:9 http://dl.google.com/linux/chrome/deb stable Release               
+Hit:10 https://dl.yarnpkg.com/debian stable InRelease
+Get:1 https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt xenial-cm6.2.1 InRelease [2,155 B]
+Get:12 https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt xenial-cm6.2.1/contrib amd64 Packages [1,758 B]
+Fetched 3,913 B in 2s (1,552 B/s)      
+Reading package lists... Done
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+************************************************************************************************************
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/install_cm_server.html#install_cm_server
+* Step 3: Install Cloudera Manager Server
+************************************************************************************************************
+
+prashant@celtic:~$ sudo apt-get install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  libdbusmenu-gtk4 linux-headers-4.4.0-151 linux-headers-4.4.0-151-generic linux-image-4.4.0-151-generic linux-modules-4.4.0-151-generic linux-modules-extra-4.4.0-151-generic snapd-login-service
+Use 'sudo apt autoremove' to remove them.
+The following additional packages will be installed:
+  apache2 apache2-bin apache2-data apache2-utils libapr1 libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap liblua5.1-0 libsasl2-modules-gssapi-mit libtirpc1 python-egenix-mxdatetime
+  python-egenix-mxtools python-mysqldb python-psycopg2 rpcbind
+Suggested packages:
+  apache2-doc apache2-suexec-pristine | apache2-suexec-custom python-egenix-mxdatetime-dbg python-egenix-mxdatetime-doc python-egenix-mxtools-dbg python-egenix-mxtools-doc mysql-server
+  python-mysqldb-dbg python-psycopg2-doc
+The following NEW packages will be installed:
+  apache2 apache2-bin apache2-data apache2-utils cloudera-manager-agent cloudera-manager-daemons cloudera-manager-server libapr1 libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap liblua5.1-0
+  libsasl2-modules-gssapi-mit libtirpc1 python-egenix-mxdatetime python-egenix-mxtools python-mysqldb python-psycopg2 rpcbind
+0 upgraded, 19 newly installed, 0 to remove and 2 not upgraded.
+Need to get 1,248 MB of archives.
+After this operation, 1,492 MB of additional disk space will be used.
+Do you want to continue? [Y/n] 
+
+Get:2 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 libapr1 amd64 1.5.2-3 [86.0 kB]
+Get:5 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 libaprutil1 amd64 1.5.4-1build1 [77.1 kB]
+Get:6 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 libaprutil1-dbd-sqlite3 amd64 1.5.4-1build1 [10.6 kB]
+Get:7 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 libaprutil1-ldap amd64 1.5.4-1build1 [8,720 B]
+Get:8 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 liblua5.1-0 amd64 5.1.5-8ubuntu1 [102 kB]
+Get:1 https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt xenial-cm6.2.1/contrib amd64 cloudera-manager-daemons all 6.2.1~1426065.ubuntu1604 [1,232 MB]
+Get:9 http://us.archive.ubuntu.com/ubuntu xenial-updates/main amd64 apache2-bin amd64 2.4.18-2ubuntu3.13 [926 kB]
+Get:10 http://us.archive.ubuntu.com/ubuntu xenial-updates/main amd64 apache2-utils amd64 2.4.18-2ubuntu3.13 [82.3 kB]
+Get:11 http://us.archive.ubuntu.com/ubuntu xenial-updates/main amd64 apache2-data all 2.4.18-2ubuntu3.13 [162 kB]
+Get:12 http://us.archive.ubuntu.com/ubuntu xenial-updates/main amd64 apache2 amd64 2.4.18-2ubuntu3.13 [86.6 kB]
+Get:13 http://us.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libsasl2-modules-gssapi-mit amd64 2.1.26.dfsg1-14ubuntu0.1 [34.3 kB]                                                                  
+Get:14 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 python-egenix-mxtools amd64 3.2.9-1 [75.3 kB]                                                                                                 
+Get:15 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 python-egenix-mxdatetime amd64 3.2.9-1 [68.3 kB]                                                                                              
+Get:16 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 python-mysqldb amd64 1.3.7-1build2 [42.4 kB]                                                                                                  
+Get:17 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 python-psycopg2 amd64 2.6.1-1build2 [131 kB]                                                                                                  
+Get:18 http://us.archive.ubuntu.com/ubuntu xenial-updates/main amd64 libtirpc1 amd64 0.2.5-1ubuntu0.1 [75.4 kB]                                                                                            
+Get:19 http://us.archive.ubuntu.com/ubuntu xenial/main amd64 rpcbind amd64 0.2.3-0.2 [40.3 kB]                                                                                                             
+Get:3 https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt xenial-cm6.2.1/contrib amd64 cloudera-manager-agent amd64 6.2.1~1426065.ubuntu1604 [13.5 MB]                                                   
+Get:4 https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt xenial-cm6.2.1/contrib amd64 cloudera-manager-server all 6.2.1~1426065.ubuntu1604 [4,810 B]                                                    
+Fetched 1,248 MB in 5min 43s (3,635 kB/s)                                                                                                                                                                  
+Selecting previously unselected package libapr1:amd64.
+(Reading database ... 255526 files and directories currently installed.)
+Preparing to unpack .../libapr1_1.5.2-3_amd64.deb ...
+Unpacking libapr1:amd64 (1.5.2-3) ...
+Selecting previously unselected package libaprutil1:amd64.
+Preparing to unpack .../libaprutil1_1.5.4-1build1_amd64.deb ...
+Unpacking libaprutil1:amd64 (1.5.4-1build1) ...
+Selecting previously unselected package libaprutil1-dbd-sqlite3:amd64.
+Preparing to unpack .../libaprutil1-dbd-sqlite3_1.5.4-1build1_amd64.deb ...
+Unpacking libaprutil1-dbd-sqlite3:amd64 (1.5.4-1build1) ...
+Selecting previously unselected package libaprutil1-ldap:amd64.
+Preparing to unpack .../libaprutil1-ldap_1.5.4-1build1_amd64.deb ...
+Unpacking libaprutil1-ldap:amd64 (1.5.4-1build1) ...
+Selecting previously unselected package liblua5.1-0:amd64.
+Preparing to unpack .../liblua5.1-0_5.1.5-8ubuntu1_amd64.deb ...
+Unpacking liblua5.1-0:amd64 (5.1.5-8ubuntu1) ...
+Selecting previously unselected package apache2-bin.
+Preparing to unpack .../apache2-bin_2.4.18-2ubuntu3.13_amd64.deb ...
+Unpacking apache2-bin (2.4.18-2ubuntu3.13) ...
+Selecting previously unselected package apache2-utils.
+Preparing to unpack .../apache2-utils_2.4.18-2ubuntu3.13_amd64.deb ...
+Unpacking apache2-utils (2.4.18-2ubuntu3.13) ...
+Selecting previously unselected package apache2-data.
+Preparing to unpack .../apache2-data_2.4.18-2ubuntu3.13_all.deb ...
+Unpacking apache2-data (2.4.18-2ubuntu3.13) ...
+Selecting previously unselected package apache2.
+Preparing to unpack .../apache2_2.4.18-2ubuntu3.13_amd64.deb ...
+Unpacking apache2 (2.4.18-2ubuntu3.13) ...
+Selecting previously unselected package libsasl2-modules-gssapi-mit:amd64.
+Preparing to unpack .../libsasl2-modules-gssapi-mit_2.1.26.dfsg1-14ubuntu0.1_amd64.deb ...
+Unpacking libsasl2-modules-gssapi-mit:amd64 (2.1.26.dfsg1-14ubuntu0.1) ...
+Selecting previously unselected package python-egenix-mxtools.
+Preparing to unpack .../python-egenix-mxtools_3.2.9-1_amd64.deb ...
+Unpacking python-egenix-mxtools (3.2.9-1) ...
+Selecting previously unselected package python-egenix-mxdatetime.
+Preparing to unpack .../python-egenix-mxdatetime_3.2.9-1_amd64.deb ...
+Unpacking python-egenix-mxdatetime (3.2.9-1) ...
+Selecting previously unselected package python-mysqldb.
+Preparing to unpack .../python-mysqldb_1.3.7-1build2_amd64.deb ...
+Unpacking python-mysqldb (1.3.7-1build2) ...
+Selecting previously unselected package python-psycopg2.
+Preparing to unpack .../python-psycopg2_2.6.1-1build2_amd64.deb ...
+Unpacking python-psycopg2 (2.6.1-1build2) ...
+Selecting previously unselected package libtirpc1:amd64.
+Preparing to unpack .../libtirpc1_0.2.5-1ubuntu0.1_amd64.deb ...
+Unpacking libtirpc1:amd64 (0.2.5-1ubuntu0.1) ...
+Selecting previously unselected package rpcbind.
+Preparing to unpack .../rpcbind_0.2.3-0.2_amd64.deb ...
+Unpacking rpcbind (0.2.3-0.2) ...
+Selecting previously unselected package cloudera-manager-daemons.
+Preparing to unpack .../cloudera-manager-daemons_6.2.1~1426065.ubuntu1604_all.deb ...
++======================================================================+
+|      Error: Unable to find a compatible version of Java on this host,|
+|             either because JAVA_HOME has not been set or because a   |
+|             compatible version of Java is not installed.             |
++----------------------------------------------------------------------+
+| Please download a supported version of the Oracle JDK from the       |
+| Oracle Java web site:                                                |
+|                                                                      |
+|  > http://www.oracle.com/technetwork/java/javase/index.html <        |
+|                                                                      |
+| Cloudera Manager requires Oracle JDK 1.8 or later.                   |
+| NOTE: Cloudera Manager will find the Oracle JDK when starting,       |
+|       regardless of whether you installed the JDK using a binary     |
+|       installer or the RPM-based installer.                          |
++======================================================================+
+dpkg: error processing archive /var/cache/apt/archives/cloudera-manager-daemons_6.2.1~1426065.ubuntu1604_all.deb (--unpack):
+ subprocess new pre-installation script returned error exit status 1
+Selecting previously unselected package cloudera-manager-agent.
+Preparing to unpack .../cloudera-manager-agent_6.2.1~1426065.ubuntu1604_amd64.deb ...
+Unpacking cloudera-manager-agent (6.2.1~1426065.ubuntu1604) ...
+Selecting previously unselected package cloudera-manager-server.
+Preparing to unpack .../cloudera-manager-server_6.2.1~1426065.ubuntu1604_all.deb ...
+install: invalid user ‘cloudera-scm’
+dpkg: error processing archive /var/cache/apt/archives/cloudera-manager-server_6.2.1~1426065.ubuntu1604_all.deb (--unpack):
+ subprocess new pre-installation script returned error exit status 1
+Processing triggers for libc-bin (2.23-0ubuntu11) ...
+Processing triggers for man-db (2.7.5-1) ...
+Processing triggers for systemd (229-4ubuntu21.22) ...
+Processing triggers for ureadahead (0.100.0-19.1) ...
+ureadahead will be reprofiled on next reboot
+Processing triggers for ufw (0.35-0ubuntu2) ...
+Errors were encountered while processing:
+ /var/cache/apt/archives/cloudera-manager-daemons_6.2.1~1426065.ubuntu1604_all.deb
+ /var/cache/apt/archives/cloudera-manager-server_6.2.1~1426065.ubuntu1604_all.deb
+E: Sub-process /usr/bin/dpkg returned an error code (1)
+prashant@celtic:~$ 
+
+
+
+******************************************************************
+* To force install JDK 1.8 so that Cloudera install can continue *
+******************************************************************
+
+
+prashant@celtic:~$ sudo dpkg --remove --force-all cloudera-manager-agent
+(Reading database ... 259896 files and directories currently installed.)
+Removing cloudera-manager-agent (6.2.1~1426065.ubuntu1604) ...
+prashant@celtic:~$ sudo apt-get install oracle-j2sdk1.8
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  apache2 apache2-data apache2-utils libdbusmenu-gtk4 libtirpc1 linux-headers-4.4.0-151 linux-headers-4.4.0-151-generic linux-image-4.4.0-151-generic linux-modules-4.4.0-151-generic
+  linux-modules-extra-4.4.0-151-generic python-egenix-mxdatetime python-egenix-mxtools python-mysqldb python-psycopg2 rpcbind snapd-login-service
+Use 'sudo apt autoremove' to remove them.
+The following NEW packages will be installed:
+  oracle-j2sdk1.8
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+16 not fully installed or removed.
+Need to get 186 MB of archives.
+After this operation, 382 MB of additional disk space will be used.
+Get:1 https://archive.cloudera.com/cm6/6.2.1/ubuntu1604/apt xenial-cm6.2.1/contrib amd64 oracle-j2sdk1.8 amd64 1.8.0+update181-1 [186 MB]
+Fetched 186 MB in 48s (3,824 kB/s)                                                                                                                                                                         
+Selecting previously unselected package oracle-j2sdk1.8.
+(Reading database ... 256393 files and directories currently installed.)
+Preparing to unpack .../oracle-j2sdk1.8_1.8.0+update181-1_amd64.deb ...
+Unpacking oracle-j2sdk1.8 (1.8.0+update181-1) ...
+Setting up libapr1:amd64 (1.5.2-3) ...
+Setting up libaprutil1:amd64 (1.5.4-1build1) ...
+Setting up libaprutil1-dbd-sqlite3:amd64 (1.5.4-1build1) ...
+Setting up libaprutil1-ldap:amd64 (1.5.4-1build1) ...
+Setting up liblua5.1-0:amd64 (5.1.5-8ubuntu1) ...
+Setting up apache2-bin (2.4.18-2ubuntu3.13) ...
+Setting up apache2-utils (2.4.18-2ubuntu3.13) ...
+Setting up apache2-data (2.4.18-2ubuntu3.13) ...
+Setting up apache2 (2.4.18-2ubuntu3.13) ...
+Enabling module mpm_event.
+Enabling module authz_core.
+Enabling module authz_host.
+Enabling module authn_core.
+Enabling module auth_basic.
+Enabling module access_compat.
+Enabling module authn_file.
+Enabling module authz_user.
+Enabling module alias.
+Enabling module dir.
+Enabling module autoindex.
+Enabling module env.
+Enabling module mime.
+Enabling module negotiation.
+Enabling module setenvif.
+Enabling module filter.
+Enabling module deflate.
+Enabling module status.
+Enabling conf charset.
+Enabling conf localized-error-pages.
+Enabling conf other-vhosts-access-log.
+Enabling conf security.
+Enabling conf serve-cgi-bin.
+Enabling site 000-default.
+Setting up libsasl2-modules-gssapi-mit:amd64 (2.1.26.dfsg1-14ubuntu0.1) ...
+Setting up python-egenix-mxtools (3.2.9-1) ...
+Setting up python-egenix-mxdatetime (3.2.9-1) ...
+Setting up python-mysqldb (1.3.7-1build2) ...
+Setting up python-psycopg2 (2.6.1-1build2) ...
+Setting up libtirpc1:amd64 (0.2.5-1ubuntu0.1) ...
+Setting up rpcbind (0.2.3-0.2) ...
+Setting up oracle-j2sdk1.8 (1.8.0+update181-1) ...
+Processing triggers for libc-bin (2.23-0ubuntu11) ...
+Processing triggers for systemd (229-4ubuntu21.22) ...
+Processing triggers for ureadahead (0.100.0-19.1) ...
+Processing triggers for ufw (0.35-0ubuntu2) ...
+prashant@celtic:~$ 
+
+*********************************
+* add JAVA_HOME and PATH to JDK *
+*********************************
+
+
+prashant@celtic:~$ export JAVA_HOME=/usr/lib/jvm/java-8-oracle-cloudera
+prashant@celtic:~$ echo $JAVA_HOME
+/usr/lib/jvm/java-8-oracle-cloudera
+prashant@celtic:~$ export PATH=$PATH:$JAVA_HOME/bin
+prashant@celtic:~$ java -version
+java version "1.8.0_181"
+Java(TM) SE Runtime Environment (build 1.8.0_181-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 25.181-b13, mixed mode)
+prashant@celtic:~$ 
+
+
+******************************
+* continue after JDK install *
+******************************
+
+prashant@celtic:~$ sudo apt-get install cloudera-manager-daemons cloudera-manager-agent cloudera-manager-server
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  libdbusmenu-gtk4 linux-headers-4.4.0-151 linux-headers-4.4.0-151-generic linux-image-4.4.0-151-generic linux-modules-4.4.0-151-generic linux-modules-extra-4.4.0-151-generic snapd-login-service
+Use 'sudo apt autoremove' to remove them.
+The following NEW packages will be installed:
+  cloudera-manager-agent cloudera-manager-daemons cloudera-manager-server
+0 upgraded, 3 newly installed, 0 to remove and 2 not upgraded.
+Need to get 0 B/1,246 MB of archives.
+After this operation, 1,484 MB of additional disk space will be used.
+(Reading database ... 258187 files and directories currently installed.)
+Preparing to unpack .../cloudera-manager-daemons_6.2.1~1426065.ubuntu1604_all.deb ...
+Unpacking cloudera-manager-daemons (6.2.1~1426065.ubuntu1604) ...
+Selecting previously unselected package cloudera-manager-agent.
+Preparing to unpack .../cloudera-manager-agent_6.2.1~1426065.ubuntu1604_amd64.deb ...
+Unpacking cloudera-manager-agent (6.2.1~1426065.ubuntu1604) ...
+Preparing to unpack .../cloudera-manager-server_6.2.1~1426065.ubuntu1604_all.deb ...
+Unpacking cloudera-manager-server (6.2.1~1426065.ubuntu1604) ...
+Setting up cloudera-manager-daemons (6.2.1~1426065.ubuntu1604) ...
+Setting up cloudera-manager-agent (6.2.1~1426065.ubuntu1604) ...
+[29/Sep/2019 16:15:47 +0000] 24675 MainThread upgrade      WARNING  No existing supervisor found: No supervisor config present
+Setting up cloudera-manager-server (6.2.1~1426065.ubuntu1604) ...
+prashant@celtic:~$ 
+
+
+
+************************************************************************************************************
+* (Recommended) Enable Auto-TLS
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/install_cm_server.html#enable_auto_tls
+************************************************************************************************************
+
+prashant@celtic:~$ sudo /opt/cloudera/cm-agent/bin/certmanager setup --configure-services
+INFO:root:Logging to /var/log/cloudera-scm-agent/certmanager.log
+Traceback (most recent call last):
+  File "/opt/cloudera/cm-agent/bin/certmanager", line 11, in <module>
+    load_entry_point('cmf==6.2.1', 'console_scripts', 'certmanager')()
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/cmf/tools/cert.py", line 2391, in main
+    return certmanager(obj=argparse.Namespace())
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/click/core.py", line 716, in __call__
+    return self.main(*args, **kwargs)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/click/core.py", line 696, in main
+    rv = self.invoke(ctx)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/click/core.py", line 1060, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/click/core.py", line 889, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/click/core.py", line 534, in invoke
+    return callback(*args, **kwargs)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/click/decorators.py", line 27, in new_func
+    return f(get_current_context().obj, *args, **kwargs)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/cmf/tools/cert.py", line 2163, in setup
+    ctx_obj.certmanager.init_internal_ca(config, override, rotate)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/cmf/tools/cert.py", line 1107, in init_internal_ca
+    self.init_certmanager(config, override, rotate)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/cmf/tools/cert.py", line 1079, in init_certmanager
+    self.setup_config(config, override)
+  File "/opt/cloudera/cm-agent/lib/python2.7/site-packages/cmf/tools/cert.py", line 1032, in setup_config
+    raise Exception("No keytool found. Set JAVA_HOME or set 'keytool'"
+Exception: No keytool found. Set JAVA_HOME or set 'keytool' config param
+
+
+************************************************************************************************************
+* Install and Configure PostgreSQL for Cloudera Software
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/cm_ig_extrnl_pstgrs.html#cmig_topic_5_6
+************************************************************************************************************
+=> postgresql server is already installed on Ubuntu
+
+prashant@celtic:~$ sudo pip install psycopg2==2.7.5 --ignore-installed
+DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.
+WARNING: The directory '/home/prashant/.cache/pip/http' or its parent directory is not owned by the current user and the cache has been disabled. Please check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+WARNING: The directory '/home/prashant/.cache/pip' or its parent directory is not owned by the current user and caching wheels has been disabled. check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+Collecting psycopg2==2.7.5
+  Downloading https://files.pythonhosted.org/packages/7c/e6/d5161798a5e8900f24216cb730f2c2be5e4758a80d35c8588306831c0c99/psycopg2-2.7.5-cp27-cp27mu-manylinux1_x86_64.whl (2.7MB)
+     |████████████████████████████████| 2.7MB 102kB/s 
+Installing collected packages: psycopg2
+Successfully installed psycopg2-2.7.5
+prashant@celtic:~$ 
+
+************************************************************************************************************
+* Configuring and Starting the PostgreSQL Server
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/cm_ig_extrnl_pstgrs.html#cmig_topic_5_6_1
+************************************************************************************************************
+
+=> Enable MD5 authentication. Edit pg_hba.conf,
+
+=> Configure settings to ensure your system performs as expected. Update these settings in the "/etc/postgresql/9.5/main/postgresql.conf"
+for Small to mid-sized clusters:
+
+max_connection = 100
+shared_buffers = 256 MB
+
+Write Ahead Settings......
+wal_level = minimal
+wal_buffers = 8 MB
+for postgresql 9.5, in place of "checkpoint_segments = 16".....
+min_wal_size = 80 MB
+max_wal_size = (3 * checkpoint_segments) * 16MB (768 MB)
+checkpoint_completion_target = 0.9
+
+************************************************************************************************************
+* Creating Databases for Cloudera Software
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/cm_ig_extrnl_pstgrs.html#cmig_topic_5_6_2
+************************************************************************************************************
+# Cloudera Manager Server 
+CREATE ROLE scm LOGIN PASSWORD 'scm';
+CREATE DATABASE scm OWNER scm ENCODING 'UTF8';
+
+# Activity Monitor
+CREATE ROLE amon LOGIN PASSWORD 'amon';
+CREATE DATABASE amon OWNER amon ENCODING 'UTF8';
+
+# Reports Manager
+CREATE ROLE rman LOGIN PASSWORD 'rman';
+CREATE DATABASE rman OWNER rman ENCODING 'UTF8';
+
+# Hue
+CREATE ROLE hue LOGIN PASSWORD 'hue';
+CREATE DATABASE hue OWNER hue ENCODING 'UTF8';
+
+# Hive Metastore Server
+CREATE ROLE hive LOGIN PASSWORD 'hive';
+CREATE DATABASE metastore OWNER hive ENCODING 'UTF8';
+
+# Sentry Server
+CREATE ROLE sentry LOGIN PASSWORD 'sentry';
+CREATE DATABASE sentry OWNER sentry ENCODING 'UTF8';
+
+# Cloudera Navigator Audit Server
+CREATE ROLE nav LOGIN PASSWORD 'nav';
+CREATE DATABASE nav OWNER nav ENCODING 'UTF8';
+
+# Cloudera Navigator Metadata Server
+CREATE ROLE navms LOGIN PASSWORD 'navms';
+CREATE DATABASE navms OWNER navms ENCODING 'UTF8';
+
+# Oozie
+CREATE ROLE oozie LOGIN PASSWORD 'oozie';
+CREATE DATABASE oozie OWNER oozie ENCODING 'UTF8';
+
+For PostgreSQL 8.4 and higher, set standard_conforming_strings=off for the Hive Metastore and Oozie databases:
+ALTER DATABASE metastore SET standard_conforming_strings=off;
+ALTER DATABASE oozie SET standard_conforming_strings=off;
+
+
+# Cloudera Manager Server 
+DROP DATABASE scm;
+DROP ROLE scm;
+
+# Activity Monitor
+DROP DATABASE amon;
+DROP ROLE amon;
+
+# Reports Manager
+DROP DATABASE rman;
+DROP ROLE rman;
+
+# Hue
+DROP DATABASE hue;
+DROP ROLE hue;
+
+# Hive Metastore Server
+DROP DATABASE metastore;
+DROP ROLE hive;
+
+# Sentry Server
+DROP DATABASE sentry;
+DROP ROLE sentry;
+
+# Cloudera Navigator Audit Server
+DROP DATABASE nav;
+DROP ROLE nav;
+
+# Cloudera Navigator Metadata Server
+DROP DATABASE navms;
+DROP ROLE navms;
+
+# Oozie
+DROP DATABASE oozie;
+DROP ROLE oozie;
+
+
+prashant@celtic:~$ sudo -u postgres psql
+psql (9.5.19)
+Type "help" for help.
+
+postgres=# CREATE ROLE scm LOGIN PASSWORD 'scm';
+CREATE ROLE
+postgres=# CREATE DATABASE scm OWNER scm ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE amon LOGIN PASSWORD 'amon';
+CREATE ROLE
+postgres=# CREATE DATABASE amon OWNER amon ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE rman LOGIN PASSWORD 'rman';
+CREATE ROLE
+postgres=# CREATE DATABASE rman OWNER rman ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE hue LOGIN PASSWORD 'hue';
+CREATE ROLE
+postgres=# CREATE DATABASE hue OWNER hue ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE hive LOGIN PASSWORD 'hive';
+CREATE ROLE
+postgres=# CREATE DATABASE metastore OWNER hive ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE sentry LOGIN PASSWORD 'sentry';
+CREATE ROLE
+postgres=# CREATE DATABASE sentry OWNER sentry ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE nav LOGIN PASSWORD 'nav';
+CREATE ROLE
+postgres=# CREATE DATABASE nav OWNER nav ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE navms LOGIN PASSWORD 'navms';
+CREATE ROLE
+postgres=# CREATE DATABASE navms OWNER navms ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# CREATE ROLE oozie LOGIN PASSWORD 'oozie';
+CREATE ROLE
+postgres=# CREATE DATABASE oozie OWNER oozie ENCODING 'UTF8';
+CREATE DATABASE
+postgres=# 
+postgres=# ALTER DATABASE metastore SET standard_conforming_strings=off;
+ALTER DATABASE
+postgres=# ALTER DATABASE oozie SET standard_conforming_strings=off;
+ALTER DATABASE
+postgres=# 
+
+
+*******************************************************************************************
+* Step 5: Set up the Cloudera Manager Database
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/prepare_cm_database.html
+*******************************************************************************************
+
+**************************************************************************************************************
+* Syntax for scm_prepare_database.sh
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/prepare_cm_database.html#scm_prepare_syntax
+**************************************************************************************************************
+
+prashant@celtic:~$ sudo /opt/cloudera/cm/schema/scm_prepare_database.sh postgresql scm scm
+[sudo] password for prashant: 
+Enter SCM password: 
+JAVA_HOME=/usr/lib/jvm/java-8-oracle-cloudera
+Verifying that we can write to /etc/cloudera-scm-server
+Creating SCM configuration file in /etc/cloudera-scm-server
+Executing:  /usr/lib/jvm/java-8-oracle-cloudera/bin/java -cp /usr/share/java/mysql-connector-java.jar:/usr/share/java/oracle-connector-java.jar:/usr/share/java/postgresql-connector-java.jar:/opt/cloudera/cm/schema/../lib/* com.cloudera.enterprise.dbutil.DbCommandExecutor /etc/cloudera-scm-server/db.properties com.cloudera.cmf.db.
+log4j:ERROR Could not find value for key log4j.appender.A
+log4j:ERROR Could not instantiate appender named "A".
+[2019-09-29 17:32:59,590] INFO     0[main] - com.cloudera.enterprise.dbutil.DbCommandExecutor.testDbConnection(DbCommandExecutor.java) - Successfully connected to database.
+All done, your SCM database is configured correctly!
+prashant@celtic:~$ 
+
+
+******************************************************************************************************************************
+* Step 6: Install CDH and Other Software
+* https://docs.cloudera.com/documentation/enterprise/6/6.2/topics/install_software_cm_wizard.html#cm_installation_wizard
+******************************************************************************************************************************
+sudo systemctl start cloudera-scm-server
+
+sudo tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+
+till the log shows 
+INFO WebServerImpl:com.cloudera.server.cmf.WebServerImpl: Started Jetty server.
+
+if installation fails - stop services / drop databases and roles / start again
+
+
+Browse this page and follow installation wizard
+http://celtic.pacificsevenseas.com:7180
+
+
+Create password less sudo for running installations / agents
+first create user with password: sudo adduser esky
+
+Then,
+Edit sudoers file: sudo nano /etc/sudoers
+Find a line which contains includedir /etc/sudoers.d
+Below that line add: username ALL=(ALL) NOPASSWD: ALL , where username is your passwordless sudo username; Save your changes.
+
+
+
+During inspection of cluster following problem detected....
+
+===>
+Cloudera recommends setting /proc/sys/vm/swappiness to a maximum of 10. Current setting is 60. Use the sysctl command to change this setting at run time and edit /etc/sysctl.conf for this setting to be saved after a reboot. You can continue with installation, but Cloudera Manager might report that your hosts are unhealthy because they are swapping. The following hosts are affected:
+ View Details
+celtic.pacificsevenseas.com
+<===
+
+sudo sysctl vm.swappiness=10
+
+sudo nano /etc/sysctl.conf
+
+
+Install services
+===> Choose your own services. Services required by chosen services will automatically be included. Flume can be added after your initial cluster has been set up.
+
+Service Type	Description
+ HBase	Apache HBase provides random, real-time, read/write access to large data sets (requires HDFS and ZooKeeper).
+
+ HDFS	Apache Hadoop Distributed File System (HDFS) is the primary storage system used by Hadoop applications. HDFS creates multiple replicas of data blocks and distributes them on compute hosts throughout a cluster to enable reliable, extremely rapid computations.
+
+ Hive	Hive is a data warehouse system that offers a SQL-like language called HiveQL.
+
+ Hue	Hue is a graphical user interface to work with the Cloudera Distribution Including Apache Hadoop (requires HDFS, MapReduce, and Hive).
+
+ Impala	Impala provides a real-time SQL query interface for data stored in HDFS and HBase. Impala requires the Hive service and shares the Hive Metastore with Hue.
+
+ Isilon	EMC Isilon is a distributed filesystem.
+
+ Kafka	Apache Kafka is publish-subscribe messaging rethought as a distributed commit log.
+
+ Key-Value Store Indexer	Key-Value Store Indexer listens for changes in data inside tables contained in HBase and indexes them using Solr.
+
+ Kudu	Kudu is a true column store for the Hadoop ecosystem.
+
+ Oozie	Oozie is a workflow coordination service to manage data processing jobs on your cluster.
+
+ Solr	Solr is a distributed service for indexing and searching data stored in HDFS.
+
+ Spark	Apache Spark is an open source cluster computing system. This service runs Spark as an application on YARN.
+
+ YARN (MR2 Included)	Apache Hadoop MapReduce 2.0 (MRv2), or YARN, is a data computation framework that supports MapReduce applications (requires HDFS).
+
+ ZooKeeper	Apache ZooKeeper is a centralized service for maintaining and synchronizing configuration data.
+
+
+
+To start Cloudera Manager,
+sudo systemctl start cloudera-scm-server
+sudo tail -f /var/log/cloudera-scm-server/cloudera-scm-server.log
+
+To stop Cloudera Manager,
+sudo service cloudera-scm-server stop
+
+Then exit out of the log tail..
+
+
+********************************************
+* Start admin console in browser and login *
+********************************************
+http://celtic.pacificsevenseas.com:7180/cmf/login
+User name: admin
+Password: admin
+
+Start service monitor
+Start Cloudera Management Service
+
